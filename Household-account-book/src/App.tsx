@@ -8,6 +8,7 @@ import AppLayout from './components/AppLayout'
 
 function App() {
   return (
+    //リンク先を表示するルートコンポーネントを準備
     <Router>
       <Routes>
         <Route path='/' element={<AppLayout/>}>
