@@ -5,7 +5,7 @@ import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import { NavLink } from 'react-router-dom';
-
+import { CSSProperties } from 'react';
 
 interface SideBarProps {
     drawerWidth : number,
@@ -26,13 +26,39 @@ const SideBar = ({drawerWidth , mobileOpen , handleDrawerTransitionEnd , handleD
         {text : "Home" , path: "/" , icon : HomeIcon},
         {text : "Report" , path: "/report" , icon : EqualizerIcon}
     ]
+    //Reactコンポーネントにcssを当てたい場合はCSSPropertiesを使う
+    const baseLinkStyle: CSSProperties = {
+      textDecoration: "none",
+      color: "inherit",
+      display: "block"
+    }
+    const activeLinkStyle: CSSProperties = {
+      backgroundColor: "rgba(0, 0, 0, 0.08)"
+    }
+
+    // アイテムの背景色を変更する機能はNavLinkのactiveStyleプロパティを使用する
+    // style属性はオブジェクトを返す必要がある。アロー関数でオブジェクトを返す場合は、
+    // ()で囲む必要がある
+    const getNavLink = (isActive : boolean) : CSSProperties => (
+      {
+          //動的に最新のcssを当てたいので、スプレット構文を使用
+          // textDecoration: "none",
+          // color: "inherit",
+          // display: "block"
+          ...baseLinkStyle,
+          ...(isActive ? activeLinkStyle : {})
+      }
+    );
+
     const drawer = (
         <div>
           <Toolbar/>
           <Divider />
           <List>
             {MenuItems.map((item, index) => (
-                <NavLink to={item.path}>
+                <NavLink key={index}  to={item.path} 
+                  //isActiveはリンクが現在のページに一致するかをbooleanで返すオブジェクト
+                  style={({ isActive }) => getNavLink(isActive)}>
                     <ListItem key={index} disablePadding>
                         <ListItemButton >
                         <ListItemIcon >
