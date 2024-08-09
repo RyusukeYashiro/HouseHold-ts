@@ -18,7 +18,6 @@ declare module "@mui/material/styles" {
     }
 }
 
-
 export const  Theme = createTheme({
     typography: {
         fontFamily: 'Noto Sans JP , Roboto , sans-serif',
