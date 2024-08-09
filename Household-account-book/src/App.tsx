@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react'
 import { Transaction } from './types/index'
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from "./firebase";
+import { formatMonth } from "./utils/formatting"
 
 function App() {
   function isFireStoreError(err : unknown) : err is {code : string , message : string} {
@@ -19,6 +20,8 @@ function App() {
   }
   //値を管理したいので、useStateを用いて、管理を行う
   const [transactions , setTransactions] = useState<Transaction[]>([]);
+  const [currentMonth , setCurrentMonth] = useState(new Date());
+  console.log(setCurrentMonth);
   useEffect(() => {
     const fetchTransactions = async() => {
       try {
@@ -37,7 +40,14 @@ function App() {
     }
     }
     fetchTransactions();
-  } , [])
+  } , []);
+  //現在の月に合致するものを取得する変数
+  const monthlyTransactions = transactions.filter((transaction) => {
+    return transaction.data.startsWith(formatMonth(currentMonth));
+  });
+  
+  console.log(monthlyTransactions);
+
   return (
     //リンク先を表示するルートコンポーネントを準備
     <ThemeProvider theme={Theme}>
@@ -46,7 +56,8 @@ function App() {
       <Router>
         <Routes>
           <Route path='/' element={<AppLayout/>}>
-            <Route index element={<Home/>}></Route>
+            {/* //現在の月を表示させるために、propsで情報を渡す */}
+            <Route index element={<Home monthlyTransactions={monthlyTransactions}/>}></Route>
             <Route path='report' element={<Report/>}></Route>
             {/* //マッチしない場合は、これのリンクへと飛ばす */}
             <Route path='*' element={<Nomatch/>}></Route>
