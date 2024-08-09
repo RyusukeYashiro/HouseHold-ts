@@ -2,8 +2,18 @@ import { Card, CardContent, Grid, Stack, Typography } from '@mui/material'
 import PaidIcon from '@mui/icons-material/Paid';
 import PaymentIcon from '@mui/icons-material/Payment';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import { Transaction } from '../../types';
+import { financeCaul } from '../../utils/financeCaul';
 
-const MonthlySummary = () => {
+interface  MonthlySummaryProps{
+  monthlyTransactions : Transaction[],
+}
+
+const MonthlySummary = ({monthlyTransactions} : MonthlySummaryProps) => {
+  //受け取ったpropsをカードで表示させるために、計算する関数に渡して表示させる
+  const  monthlyTotals = financeCaul(monthlyTransactions);
+  console.log(monthlyTotals);
+  
   return (
     <Grid container spacing={{ xs: 1 , sm: 2}} mb={2}>
       <Grid item xs={4} display={"flex"} flexDirection={"column"}>
@@ -26,7 +36,7 @@ const MonthlySummary = () => {
             textAlign={"right"} 
             variant='h5' 
             fontWeight={"fontWeightBold"}
-            sx={{wordBreak : "break-word", fontSize: {xs : ".8rem" , sm : "1rem" , md : "1.2rem"}}}>$300</Typography>
+            sx={{wordBreak : "break-word", fontSize: {xs : ".8rem" , sm : "1rem" , md : "1.2rem"}}}>{monthlyTotals.income}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -52,7 +62,7 @@ const MonthlySummary = () => {
               wordBreak : "break-word",
               fontSize: {xs : ".8rem" , sm : "1rem",
               md : "1.2rem"}}
-              }>$900</Typography>
+              }>{monthlyTotals.expense}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -78,7 +88,7 @@ const MonthlySummary = () => {
               wordBreak : "break-word",
               fontSize: {xs : ".8rem",
               sm : "1rem",
-              md : "1.2rem"}}}>$9</Typography>
+              md : "1.2rem"}}}>{monthlyTotals.balance}</Typography>
           </CardContent>
         </Card>
       </Grid>
