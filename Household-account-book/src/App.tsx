@@ -21,7 +21,6 @@ function App() {
   //値を管理したいので、useStateを用いて、管理を行う
   const [transactions , setTransactions] = useState<Transaction[]>([]);
   const [currentMonth , setCurrentMonth] = useState(new Date());
-  console.log(setCurrentMonth);
   useEffect(() => {
     const fetchTransactions = async() => {
       try {
@@ -57,7 +56,7 @@ function App() {
         <Routes>
           <Route path='/' element={<AppLayout/>}>
             {/* //現在の月を表示させるために、propsで情報を渡す */}
-            <Route index element={<Home monthlyTransactions={monthlyTransactions}/>}></Route>
+            <Route index element={<Home monthlyTransactions={monthlyTransactions} setCurrentMonth={setCurrentMonth}/>}></Route>
             <Route path='report' element={<Report/>}></Route>
             {/* //マッチしない場合は、これのリンクへと飛ばす */}
             <Route path='*' element={<Nomatch/>}></Route>
