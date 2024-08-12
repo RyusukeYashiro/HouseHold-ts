@@ -1,0 +1,42 @@
+
+.fc-h-event {
+    background-color: transparent;
+    border: none;
+    text-align: right;
+    pointer-events: none; 
+  }
+  
+  .fc-daygrid-body,
+  .fc-day {
+    background-color: white; 
+  }
+  
+  .fc-col-header-cell {
+    background-color: #42a5f5;
+    color: white;
+  }
+  
+  .fc .fc-daygrid-day-frame {
+    height: 100%;
+    min-height: 100px;
+  }
+  
+  .money {
+    white-space: nowrap; /* 繝�く繧ｹ繝医ｒ謚倥ｊ霑斐＆縺ｪ縺� */
+    overflow: hidden; /* 縺ｯ縺ｿ蜃ｺ縺励◆繝�く繧ｹ繝医ｒ髫�縺� */
+    text-overflow: ellipsis; /* 縺ｯ縺ｿ蜃ｺ縺励◆繝�く繧ｹ繝医�莉｣繧上ｊ縺ｫ逵∫払險伜捷繧定｡ｨ遉ｺ */
+  }
+
+
+  
+  #event-income {
+    color: #2196f3;
+  }
+  
+  #event-expense {
+    color: #f44336;
+  }
+  
+  #event-balance {
+    color: #4caf50;
+  }
