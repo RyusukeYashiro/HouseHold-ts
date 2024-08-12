@@ -12,4 +12,4 @@ export function financeCaul(transactions : Transaction[]) : Balance {
         acc.balance = acc.income - acc.expense;
         return acc 
     } , {income: 0 , expense: 0 , balance: 0});
-}
+} 
