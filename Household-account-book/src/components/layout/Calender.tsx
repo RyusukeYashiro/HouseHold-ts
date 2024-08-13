@@ -7,6 +7,9 @@ import { DatesSetArg, EventContentArg } from '@fullcalendar/core/index.js'
 import { financeCaul } from '../../utils/financeCaul'
 import { Transaction } from '../../types'
 import { Balance } from '../../types'
+import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
+import { Theme } from '../../theme/theme'
+import { isSameMonth } from 'date-fns/isSameMonth'
 
 interface Event {
   title : string; 
@@ -16,10 +19,15 @@ interface Event {
 interface  MonthlySummaryProps{
   monthlyTransactions : Transaction[],
   setCurrentMonth : React.Dispatch<React.SetStateAction<Date>>
+  setCurrentDay : React.Dispatch<React.SetStateAction<string>>
+  currentDay : string;
+  today : string;
 }
 
-export const Calender  = ({ monthlyTransactions ,  setCurrentMonth } : MonthlySummaryProps , ) => {
+export const Calender  = ({ monthlyTransactions ,  setCurrentMonth , setCurrentDay , currentDay , today} : MonthlySummaryProps , ) => {
   const [events, setEvents] = useState<Event[]>([]);
+  //日付を管理するstate
+  const [selectedDate, setSelectedDate] = useState<string | null>(currentDay);
   // 月のデータの変更があった場合に、処理を動的に行う
   useEffect(() => {
     // accには日付をkeyにしたオブジェクト型配列として扱う
@@ -50,16 +58,19 @@ export const Calender  = ({ monthlyTransactions ,  setCurrentMonth } : MonthlySu
       return {
         title: `Income: ${dailyData.income}, Expense: ${dailyData.expense}`,
         start: dataProps,
-        extendedProps: dailyData
+        extendedProps: dailyData,
       };
     });
     setEvents(calenderEvents);
   } , [monthlyTransactions]);
 
+  //カレンダーの見た目を作る関数
   const renderEventContent = (eventInfo : EventContentArg ) => {
-    
+    console.log("これはrendereventcontet内の" , eventInfo);
+    const isSelected = eventInfo.event.startStr === selectedDate;
+    const backgroundColor = isSelected ? Theme.palette.incomeColor.light : '';
     return (
-      <div>
+      <div style={{ backgroundColor }}>
         <div className='money' id='event-income'>
           {eventInfo.event.extendedProps.income}
         </div>
@@ -73,9 +84,20 @@ export const Calender  = ({ monthlyTransactions ,  setCurrentMonth } : MonthlySu
     )
   }
 
+  //月の情報を習得
   const handleDataSet = (DataInfo : DatesSetArg ) => {
-    // console.log("日付は" , DataInfo.view.currentStart);
-    setCurrentMonth(DataInfo.view.currentStart);
+    const currentMonth = DataInfo.view.currentStart;
+    //console.log("日付は" , DataInfo.view.currentStart);
+    setCurrentMonth(currentMonth);
+    if(isSameMonth(today , currentMonth)){
+      setCurrentDay(today);
+    }
+  }
+
+  const handleDateClick = (DataInfo : DateClickArg) => {
+    // console.log("test" , DataInfo);
+    setCurrentDay(DataInfo.dateStr);
+    setSelectedDate(DataInfo.dateStr);
   }
 
   return (
@@ -83,11 +105,12 @@ export const Calender  = ({ monthlyTransactions ,  setCurrentMonth } : MonthlySu
       <div className='calender-app-main'>
       <FullCalendar
           locale={jaLocale}
-          plugins={[dayGridPlugin]} // pluginsにdayGridPluginを設定する
+          plugins={[dayGridPlugin , interactionPlugin]} // pluginsにdayGridPluginを設定する
           initialView="dayGridMonth" // 初期表示のモードを設定する
           events={events}
           eventContent={renderEventContent}
           datesSet={handleDataSet}
+          dateClick={handleDateClick}
         />
       </div>
     </div>
