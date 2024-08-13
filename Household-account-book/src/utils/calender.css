@@ -22,9 +22,9 @@
   }
   
   .money {
-    white-space: nowrap; /* 繝�く繧ｹ繝医ｒ謚倥ｊ霑斐＆縺ｪ縺� */
-    overflow: hidden; /* 縺ｯ縺ｿ蜃ｺ縺励◆繝�く繧ｹ繝医ｒ髫�縺� */
-    text-overflow: ellipsis; /* 縺ｯ縺ｿ蜃ｺ縺励◆繝�く繧ｹ繝医�莉｣繧上ｊ縺ｫ逵∫払險伜捷繧定｡ｨ遉ｺ */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
   }
 
 
