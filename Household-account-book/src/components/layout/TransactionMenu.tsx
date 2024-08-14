@@ -7,11 +7,13 @@ import getCategoryIcon from '../common/icon';
 
 export interface transactionProps {
   dailyTransactions : Transaction[];
-  currentDay : string
+  currentDay : string;
+  onhandletransaction : () => void;
 }
 
-const TransactionMenu = ({dailyTransactions , currentDay} : transactionProps) => {
+const TransactionMenu = ({dailyTransactions , currentDay , onhandletransaction} : transactionProps) => {
   const menuDrawerWidth = 320;
+
   return (
     <Drawer
       sx={{
@@ -39,7 +41,7 @@ const TransactionMenu = ({dailyTransactions , currentDay} : transactionProps) =>
                 <EditNoteIcon sx={{mr : 1}}></EditNoteIcon>
                 <Typography variant="body1">内訳</Typography>
               </Box>
-              <Button startIcon={<AddIcon></AddIcon>} color="primary" >内訳を追加</Button>
+              <Button startIcon={<AddIcon></AddIcon>} color="primary" onClick={onhandletransaction}></Button>
             </Box>
             {/* 取引一覧 */}
             <Box sx={{flexGrow: 1}}>

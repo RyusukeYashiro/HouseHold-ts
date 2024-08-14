@@ -15,12 +15,28 @@ interface HomeProps {
 const Home = ({ monthlyTransactions , setCurrentMonth } : HomeProps) => {
   const today = format(new Date() , "yyyy-mm-dd");
   const [currentDay , setCurrentDay] = useState(today);
+  const [closeformcheck , setCloseFormCheck] = useState(false);
   console.log('クリックされた時の日付' , currentDay);
 
   //filterで現在の日付のデータを月のデータからフィルタリング
   const dailyTransactions = monthlyTransactions.filter((transaction) => {
     return transaction.data === currentDay;
   })
+
+  //formを閉じるボタンの実装
+  const onCloseForm = () => {
+    // falseたったらtrue
+    // trueたったらfalse
+    setCloseFormCheck(!closeformcheck);
+
+  }
+
+  const handletransaction = () => {
+    // falseたったらtrue
+    // trueたったらfalse
+    setCloseFormCheck(!closeformcheck);
+  }
+
   return (
     <Box sx={{display : "flex"}}>
       {/* 左側に表示するコンテンツ */}
@@ -36,8 +52,8 @@ const Home = ({ monthlyTransactions , setCurrentMonth } : HomeProps) => {
       </Box>
       {/* 右側に表示するコンテンツ */}
       <Box>
-        <TransactionMenu dailyTransactions={dailyTransactions} currentDay={currentDay}/>
-        <TransactionForm/>
+        <TransactionMenu dailyTransactions={dailyTransactions} currentDay={currentDay} onhandletransaction={handletransaction}/>
+        <TransactionForm onCloseForm={onCloseForm} closeformcheck={closeformcheck}/>
       </Box>
     </Box>
   )
