@@ -13,10 +13,10 @@ interface HomeProps {
 }
 
 const Home = ({ monthlyTransactions , setCurrentMonth } : HomeProps) => {
-  const today = format(new Date() , "yyyy-mm-dd");
+  const today = format(new Date() , "yyyy-MM-dd");
   const [currentDay , setCurrentDay] = useState(today);
   const [closeformcheck , setCloseFormCheck] = useState(false);
-  console.log('クリックされた時の日付' , currentDay);
+  // console.log('クリックされた時の日付を表示!' , currentDay);
 
   //filterで現在の日付のデータを月のデータからフィルタリング
   const dailyTransactions = monthlyTransactions.filter((transaction) => {
@@ -52,8 +52,15 @@ const Home = ({ monthlyTransactions , setCurrentMonth } : HomeProps) => {
       </Box>
       {/* 右側に表示するコンテンツ */}
       <Box>
-        <TransactionMenu dailyTransactions={dailyTransactions} currentDay={currentDay} onhandletransaction={handletransaction}/>
-        <TransactionForm onCloseForm={onCloseForm} closeformcheck={closeformcheck}/>
+        <TransactionMenu 
+          dailyTransactions={dailyTransactions}
+          currentDay={currentDay} 
+          onhandletransaction={handletransaction}
+        />
+        <TransactionForm 
+        onCloseForm={onCloseForm} 
+        closeformcheck={closeformcheck} 
+        currentDay={currentDay}/>
       </Box>
     </Box>
   )
