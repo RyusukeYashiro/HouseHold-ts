@@ -32,7 +32,7 @@ export const Calender  = ({ monthlyTransactions ,  setCurrentMonth , setCurrentD
   useEffect(() => {
     // accには日付をkeyにしたオブジェクト型配列として扱う
     const dailySummaries = monthlyTransactions.reduce((acc : {[key : string] : Transaction[]} , transaction : Transaction) => {
-      console.log("ここで一旦transactionを見る（Calender)" , transaction);
+      // console.log("ここで一旦transactionを見る（Calender)" , transaction);
       const holdData = transaction.data;
       // acc オブジェクトに date キーが存在しない場合、そのキーで空の配列を初期化
       if(!acc[holdData]) acc[holdData] = [];
