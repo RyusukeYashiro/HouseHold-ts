@@ -1,4 +1,4 @@
-import { Box, Button, CardActionArea, CardContent, Drawer, Grid, List, ListItem, Stack, Typography } from '@mui/material'
+import { Box, Button, Card, CardActionArea, CardContent, Drawer, Grid, List, ListItem, Stack, Typography } from '@mui/material'
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import AddIcon from '@mui/icons-material/Add';
 import DailySummary from './DailySummary';
@@ -9,9 +9,10 @@ export interface transactionProps {
   dailyTransactions : Transaction[];
   currentDay : string;
   onhandletransaction : () => void;
+  onSelectTransaction :  (transaction: Transaction) => void;
 }
 
-const TransactionMenu = ({dailyTransactions , currentDay , onhandletransaction} : transactionProps) => {
+const TransactionMenu = ({dailyTransactions , currentDay , onhandletransaction , onSelectTransaction} : transactionProps) => {
   const menuDrawerWidth = 320;
 
   return (
@@ -49,8 +50,16 @@ const TransactionMenu = ({dailyTransactions , currentDay , onhandletransaction} 
                 <Stack spacing={2}>
                   {dailyTransactions.map((transaction) => (
                     <ListItem key={transaction.id} disablePadding>
-                    <CardActionArea sx={{width : "100%"}}>
-                      <CardContent>
+                      <Card sx={{
+                        width: "100%",
+                        backgroundColor : 
+                          transaction.type === "income" 
+                          ? (theme) => theme.palette.incomeColor.light 
+                          : (theme) => theme.palette.expenseColor.light
+                      }}
+                      onClick={() => onSelectTransaction(transaction)}>
+                        <CardActionArea sx={{width : "100%"}}>
+                          <CardContent>
                         <Grid 
                           container 
                           spacing={1} 
@@ -74,9 +83,10 @@ const TransactionMenu = ({dailyTransactions , currentDay , onhandletransaction} 
                               }}>{transaction.amount}</Typography>
                           </Grid>
                         </Grid>
-                      </CardContent>
-                    </CardActionArea>
-                  </ListItem>
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </ListItem>
                   ))}
                 </Stack>
               </List>
