@@ -33,10 +33,10 @@ export const Calender  = ({ monthlyTransactions ,  setCurrentMonth , setCurrentD
     // accには日付をkeyにしたオブジェクト型配列として扱う
     const dailySummaries = monthlyTransactions.reduce((acc : {[key : string] : Transaction[]} , transaction : Transaction) => {
       // console.log("ここで一旦transactionを見る（Calender)" , transaction);
-      const holdData = transaction.data;
+      const holdDate = transaction.date;
       // acc オブジェクトに date キーが存在しない場合、そのキーで空の配列を初期化
-      if(!acc[holdData]) acc[holdData] = [];
-      acc[holdData].push(transaction);
+      if(!acc[holdDate]) acc[holdDate] = [];
+      acc[holdDate].push(transaction);
       return (acc);
     } , {});
     // 戻り値例
@@ -53,12 +53,12 @@ export const Calender  = ({ monthlyTransactions ,  setCurrentMonth , setCurrentD
     //   ...
     // }
 
-    const calenderEvents = Object.keys(dailySummaries).map(dataProps => {
-      const dailyData = financeCaul(dailySummaries[dataProps]);
+    const calenderEvents = Object.keys(dailySummaries).map(dateProps => {
+      const dailyDate = financeCaul(dailySummaries[dateProps]);
       return {
-        title: `Income: ${dailyData.income}, Expense: ${dailyData.expense}`,
-        start: dataProps,
-        extendedProps: dailyData,
+        title: `Income: ${dailyDate.income}, Expense: ${dailyDate.expense}`,
+        start: dateProps,
+        extendedProps: dailyDate,
       };
     });
     setEvents(calenderEvents);
@@ -94,10 +94,10 @@ export const Calender  = ({ monthlyTransactions ,  setCurrentMonth , setCurrentD
     }
   }
 
-  const handleDateClick = (DataInfo : DateClickArg) => {
+  const handleDateClick = (DateInfo : DateClickArg) => {
     // console.log("test" , DataInfo);
-    setCurrentDay(DataInfo.dateStr);
-    setSelectedDate(DataInfo.dateStr);
+    setCurrentDay(DateInfo.dateStr);
+    setSelectedDate(DateInfo.dateStr);
   }
 
   return (
