@@ -17,14 +17,16 @@ import { SchemaType } from './validations/schema'
 
 
 function App() {
+  // firesstoreのエラーを確かめる処理
   function isFireStoreError(err : unknown) : err is {code : string , message : string} {
     return typeof err === "object" && err !== null && ("code" || "message") in err
   }
-  //値を管理したいので、useStateを用いて、管理を行う
+  //取引のデータと現在の月を管理するstateで用意する
   const [transactions , setTransactions] = useState<Transaction[]>([]);
   const [currentMonth , setCurrentMonth] = useState(new Date());
   
-  //firestoreにデータを追加
+  //firestoreにデータを追加する処理
+  // 初回レンダリングを想定しているのでuseEffectを使用
   useEffect(() => {
     const fetchTransactions = async() => {
       try {
