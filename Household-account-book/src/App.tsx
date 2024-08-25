@@ -24,7 +24,9 @@ function App() {
   const [transactions , setTransactions] = useState<Transaction[]>([]);
   //現在の月を管理する
   const [currentMonth , setCurrentMonth] = useState(new Date());
-  
+  //transactiosのデータが入っていない場合は、つまりまだデータを取ってこれていない
+  const [isLoading , setIsLoading] = useState(true);
+
   //firestoreにデータを追加
   useEffect(() => {
     const fetchTransactions = async() => {
@@ -32,16 +34,18 @@ function App() {
         const TransactionData = await getDocs(collection(db , "Transactions"));
         setTransactions(TransactionData.docs.map((doc) => ({...doc.data() as Transaction, id: doc.id})));
         // console.log("dbから取得したデータを表示" , TransactionData);
+        }
+      catch(err : unknown){
+        if(isFireStoreError(err)){
+          console.error("firebaseのエラーは" , err);
+          console.error("firebaseのエラーは", err.message);
+          console.error("firebaseのエラーは" , err.code);
+        } else {
+          console.error("一般的なエラーは" , err);
+        }
+      } finally {
+        setIsLoading(false)
       }
-    catch(err : unknown){
-      if(isFireStoreError(err)){
-        console.error("firebaseのエラーは" , err);
-        console.error("firebaseのエラーは", err.message);
-        console.error("firebaseのエラーは" , err.code);
-      } else {
-        console.error("一般的なエラーは" , err);
-      }
-    }
     }
     fetchTransactions();
   } , []);
@@ -104,7 +108,12 @@ function App() {
                 onDeleteTransaction={handleDeleteTransaction}
                 />}>
             </Route>
-            <Route path='report' element={<Report currentMonth={currentMonth} setCurrentMonth={setCurrentMonth}/>}></Route>
+            <Route path='report' element={<Report 
+              currentMonth={currentMonth} 
+              setCurrentMonth={setCurrentMonth}
+              monthlyTransactions={monthlyTransactions} 
+              isLoading={isLoading}
+              />}></Route>
             {/* //マッチしない場合は、これのリンクへと飛ばす */}
             <Route path='*' element={<Nomatch/>}></Route>
           </Route>
