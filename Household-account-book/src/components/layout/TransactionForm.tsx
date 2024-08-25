@@ -79,6 +79,7 @@ const TransactionForm = ({
   const currentType = watch("type");
 
   const changeType = (type : "income" | "expense") => {
+    setCategories(type === "expense" ? expenseCategories : incomeCategories);  // カテゴリーの配列を更新
     setValue("type" , type);
     setValue("category" , "")
     trigger("category"); // トリガー再検証
@@ -99,7 +100,7 @@ const TransactionForm = ({
       // 更新されたcategoriesでカテゴリが存在するかチェックする
       const categoryExist = applicableCategories.some(category => category.label === SelectTransaction.category);
   
-      console.log(applicableCategories);
+      // console.log("適用するやつ" , applicableCategories);
       console.log(categoryExist);
   
       // 存在に基づいて値を設定
