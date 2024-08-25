@@ -22,6 +22,7 @@ function App() {
   }
   //値を管理したいので、useStateを用いて、管理を行う
   const [transactions , setTransactions] = useState<Transaction[]>([]);
+  //現在の月を管理する
   const [currentMonth , setCurrentMonth] = useState(new Date());
   
   //firestoreにデータを追加
@@ -103,7 +104,7 @@ function App() {
                 onDeleteTransaction={handleDeleteTransaction}
                 />}>
             </Route>
-            <Route path='report' element={<Report/>}></Route>
+            <Route path='report' element={<Report currentMonth={currentMonth} setCurrentMonth={setCurrentMonth}/>}></Route>
             {/* //マッチしない場合は、これのリンクへと飛ばす */}
             <Route path='*' element={<Nomatch/>}></Route>
           </Route>
