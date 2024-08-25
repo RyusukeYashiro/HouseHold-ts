@@ -12,7 +12,7 @@ interface  MonthlySummaryProps{
 const MonthlySummary = ({monthlyTransactions} : MonthlySummaryProps) => {
   //受け取ったpropsをカードで表示させるために、計算する関数に渡して表示させる
   const  monthlyTotals = financeCaul(monthlyTransactions);
-  console.log(monthlyTotals);
+  console.log("月のデータを表示させておく" , monthlyTotals);
   
   return (
     <Grid container spacing={{ xs: 1 , sm: 2}} mb={2}>
