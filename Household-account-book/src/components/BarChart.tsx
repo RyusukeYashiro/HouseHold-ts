@@ -36,9 +36,6 @@ const BarChart = ({monthlyTransactions , isLoading} : BarChartProps) => {
     maintainAspectRatio : false,
     responsive: true,
     plugins: {
-      // legend: {
-      //   position: "top"
-      // },
       title: {
         display: true,
         text: "日別収支"
@@ -48,6 +45,7 @@ const BarChart = ({monthlyTransactions , isLoading} : BarChartProps) => {
 
   const dailyBalances = dailyProcess(monthlyTransactions);
   console.log("reportの情報" , dailyBalances);
+  console.log("monthlyTransactions" , monthlyTransactions);
 
   const dateLabel = dailyBalances.map(item => item.start);
   const dateIncomes = dailyBalances.map(item => item.extendedProps.income);
