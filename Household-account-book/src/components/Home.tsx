@@ -12,7 +12,7 @@ interface HomeProps {
   monthlyTransactions : Transaction[],
   setCurrentMonth : React.Dispatch<React.SetStateAction<Date>>,
   onSaveTransaction : (transaction: SchemaType) => Promise<void>
-  onDeleteTransaction : (transactionId: string) => Promise<void>
+  onDeleteTransaction : (transactionId: string | readonly string[]) => Promise<void>
 }
 
 const Home = ({ 

@@ -4,12 +4,12 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import jaLocale from "@fullcalendar/core/locales/ja"
 import "../../utils/calender.css"
 import { DatesSetArg, EventContentArg } from '@fullcalendar/core/index.js'
-import { financeCaul } from '../../utils/financeCaul'
 import { Transaction } from '../../types'
 import { Balance } from '../../types'
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import { Theme } from '../../theme/theme'
 import { isSameMonth } from 'date-fns/isSameMonth'
+import { dailyProcess } from '../../utils/dailyProcess'
 
 interface Event {
   title : string; 
@@ -28,40 +28,12 @@ export const Calender  = ({ monthlyTransactions ,  setCurrentMonth , setCurrentD
   const [events, setEvents] = useState<Event[]>([]);
   //日付を管理するstate
   const [selectedDate, setSelectedDate] = useState<string | null>(currentDay);
+
   // 月のデータの変更があった場合に、処理を動的に行う
   useEffect(() => {
-    // accには日付をkeyにしたオブジェクト型配列として扱う
-    const dailySummaries = monthlyTransactions.reduce((acc : {[key : string] : Transaction[]} , transaction : Transaction) => {
-      // console.log("ここで一旦transactionを見る（Calender)" , transaction);
-      const holdDate = transaction.date;
-      // acc オブジェクトに date キーが存在しない場合、そのキーで空の配列を初期化
-      if(!acc[holdDate]) acc[holdDate] = [];
-      acc[holdDate].push(transaction);
-      return (acc);
-    } , {});
-    // 戻り値例
-    // {
-    //   "2024-08-22": [
-    //     { date: "2024-08-22", type: "income", amount: 100, ... },
-    //     { date: "2024-08-22", type: "expense", amount: 50, ... },
-    //     ...
-    //   ],
-    //   "2024-08-23": [
-    //     { date: "2024-08-23", type: "income", amount: 200, ... },
-    //     ...
-    //   ],
-    //   ...
-    // }
-
-    const calenderEvents = Object.keys(dailySummaries).map(dateProps => {
-      const dailyDate = financeCaul(dailySummaries[dateProps]);
-      return {
-        title: `Income: ${dailyDate.income}, Expense: ${dailyDate.expense}`,
-        start: dateProps,
-        extendedProps: dailyDate,
-      };
-    });
-    setEvents(calenderEvents);
+    //抽出した月から日の情報を処理する関数
+    const holdProcess = dailyProcess(monthlyTransactions);
+    setEvents(holdProcess);
   } , [monthlyTransactions]);
 
   //カレンダーの見た目を作る関数
@@ -87,7 +59,7 @@ export const Calender  = ({ monthlyTransactions ,  setCurrentMonth , setCurrentD
   //月の情報を習得
   const handleDataSet = (DataInfo : DatesSetArg ) => {
     const currentMonth = DataInfo.view.currentStart;
-    //console.log("日付は" , DataInfo.view.currentStart);
+    // console.log("日付は" , DataInfo.view.currentStart);
     setCurrentMonth(currentMonth);
     if(isSameMonth(today , currentMonth)){
       setCurrentDay(today);
