@@ -75,11 +75,17 @@ function App() {
     } 
   }
 
-  const handleDeleteTransaction = async(transactionId : string) => {
+  const handleDeleteTransaction = async(transactionId : string | readonly string[]) => {
     //fireStoreからデータを削除
     try {
-      await deleteDoc(doc(db, "Transactions", transactionId));
-      setTransactions(prevTransactions => prevTransactions.filter(transaction => transaction.id !== transactionId));
+      const IdstoDelete = Array.isArray(transactionId) ? transactionId : [transactionId];
+      for(const id of  IdstoDelete){
+        await deleteDoc(doc(db, "Transactions", id));
+      }
+      // setTransactions(prevTransactions => prevTransactions.filter(transaction => 
+      //   transaction.id !== transactionId));
+      setTransactions(prevTransactions => prevTransactions.filter(transaction => 
+        !IdstoDelete.includes(transaction.id)));
     } catch(err : unknown){
       if(isFireStoreError(err)){
         console.error("firebaseのエラーは" , err);
@@ -108,11 +114,13 @@ function App() {
                 onDeleteTransaction={handleDeleteTransaction}
                 />}>
             </Route>
-            <Route path='report' element={<Report 
-              currentMonth={currentMonth} 
-              setCurrentMonth={setCurrentMonth}
-              monthlyTransactions={monthlyTransactions} 
-              isLoading={isLoading}
+            <Route path='report' element={
+              <Report 
+                currentMonth={currentMonth} 
+                setCurrentMonth={setCurrentMonth}
+                monthlyTransactions={monthlyTransactions} 
+                isLoading={isLoading}
+                handleDeleteTransaction={handleDeleteTransaction}
               />}></Route>
             {/* //マッチしない場合は、これのリンクへと飛ばす */}
             <Route path='*' element={<Nomatch/>}></Route>
