@@ -23,7 +23,7 @@ interface onCloseFormprops{
   onSaveTransaction : (transaction: SchemaType) => Promise<void>;
   SelectTransaction : Transaction | null;
   setSelectTransaction : React.Dispatch<React.SetStateAction<Transaction | null>>
-  onDeleteTransaction : (transactionId: string) => Promise<void>
+  onDeleteTransaction : (transactionId: string | readonly string[]) => Promise<void>
 }
 
 interface CategoriesType {
