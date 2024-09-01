@@ -4,18 +4,21 @@ import MonthSelector from './MonthSelector';
 import CategoryChart from './CategoryChart';
 import BarChart from './BarChart';
 import TransactionTable from './TransactionTable';
-import { Transaction } from '../types';
+import { useAppContext } from '../context/AppContext';
+import { useMonthlyTransactions } from '../hooks/useMOnthlyTransactions';
 
-interface ReportProps {
-  currentMonth : Date;
-  setCurrentMonth : React.Dispatch<React.SetStateAction<Date>>;
-  monthlyTransactions : Transaction[];
-  isLoading : boolean;
-  handleDeleteTransaction : (transactionId: string | readonly string[]) => Promise<void>;
-}
+// interface ReportProps {
+//   currentMonth : Date;
+//   setCurrentMonth : React.Dispatch<React.SetStateAction<Date>>;
+//   monthlyTransactions : Transaction[];
+//   isLoading : boolean;
+//   handleDeleteTransaction : (transactionId: string | readonly string[]) => Promise<void>;
+// }
 
-const Report = ({currentMonth , setCurrentMonth , 
-  monthlyTransactions , isLoading , handleDeleteTransaction} : ReportProps) => {
+const Report = () => {
+
+  const {currentMonth ,onDeleteTransaction , isLoading , setCurrentMonth} = useAppContext();
+  const monthlyTransactions = useMonthlyTransactions();
 
   const commonStyle = {
     height : {xs : '400px' , md : '400px'},
@@ -40,7 +43,7 @@ const Report = ({currentMonth , setCurrentMonth ,
         </Paper>
       </Grid>
       <Grid item xs={12}>
-        <TransactionTable monthlyTransactions={monthlyTransactions} handleDeleteTransaction={handleDeleteTransaction}/>
+        <TransactionTable monthlyTransactions={monthlyTransactions} handleDeleteTransaction={onDeleteTransaction}/>
       </Grid>
     </Grid>
   )

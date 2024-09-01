@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import jaLocale from "@fullcalendar/core/locales/ja"
 import "../../utils/calender.css"
 import { DatesSetArg, EventContentArg } from '@fullcalendar/core/index.js'
-import { Transaction } from '../../types'
 import { Balance } from '../../types'
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import { Theme } from '../../theme/theme'
 import { isSameMonth } from 'date-fns/isSameMonth'
 import { dailyProcess } from '../../utils/dailyProcess'
+import { useMonthlyTransactions } from '../../hooks/useMOnthlyTransactions'
+import { useAppContext } from '../../context/AppContext'
 
 interface Event {
   title : string; 
   start : string;
   extendedProps: Balance;
 }
-interface  MonthlySummaryProps{
-  monthlyTransactions : Transaction[],
-  setCurrentMonth : React.Dispatch<React.SetStateAction<Date>>
-  setCurrentDay : React.Dispatch<React.SetStateAction<string>>
-  currentDay : string;
-  today : string;
-}
 
-export const Calender  = ({ monthlyTransactions ,  setCurrentMonth , setCurrentDay , currentDay , today} : MonthlySummaryProps , ) => {
+export const Calender  = () => {
+  // カスタムフックを取得
+  const  monthlyTransactions = useMonthlyTransactions();
+  
+  //conteApiを使用
+  const {setCurrentMonth , setCurrentDay , currentDay ,today} = useAppContext();
+
   const [events, setEvents] = useState<Event[]>([]);
   //日付を管理するstate
   const [selectedDate, setSelectedDate] = useState<string | null>(currentDay);

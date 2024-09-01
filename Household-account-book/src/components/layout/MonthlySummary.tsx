@@ -2,14 +2,11 @@ import { Card, CardContent, Grid, Stack, Typography } from '@mui/material'
 import PaidIcon from '@mui/icons-material/Paid';
 import PaymentIcon from '@mui/icons-material/Payment';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import { Transaction } from '../../types';
 import { financeCaul } from '../../utils/financeCaul';
+import { useMonthlyTransactions } from '../../hooks/useMOnthlyTransactions';
 
-interface  MonthlySummaryProps{
-  monthlyTransactions : Transaction[],
-}
-
-const MonthlySummary = ({monthlyTransactions} : MonthlySummaryProps) => {
+const MonthlySummary = () => {
+  const  monthlyTransactions = useMonthlyTransactions();
   //受け取ったpropsをカードで表示させるために、計算する関数に渡して表示させる
   const  monthlyTotals = financeCaul(monthlyTransactions);
   console.log("月のデータを表示させておく" , monthlyTotals);

@@ -8,10 +8,40 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Outlet } from 'react-router-dom';
 import SideBar from './common/SideBar';
+import { useAppContext } from '../context/AppContext';
+import { collection, getDocs } from 'firebase/firestore';
+import { isFireStoreError } from '../utils/Errorhandle';
+import { db } from '../firebase';
+import { Transaction } from '../types';
 
 const drawerWidth = 240;
 
 export default function AppLayout() {
+
+  const { setTransactions , setIsLoading} = useAppContext();
+  //firestoreにデータを追加
+  React.useEffect(() => {
+    const fetchTransactions = async() => {
+      try {
+        const TransactionData = await getDocs(collection(db , "Transactions"));
+        setTransactions(TransactionData.docs.map((doc) => ({...doc.data() as Transaction, id: doc.id})));
+        // console.log("dbから取得したデータを表示" , TransactionData);
+        }
+      catch(err : unknown){
+        if(isFireStoreError(err)){
+          console.error("firebaseのエラーは" , err);
+          console.error("firebaseのエラーは", err.message);
+          console.error("firebaseのエラーは" , err.code);
+        } else {
+          console.error("一般的なエラーは" , err);
+        }
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchTransactions();
+  } , []);
+
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
 
