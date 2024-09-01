@@ -14,16 +14,14 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SchemaType, transactionschema } from '../../validations/schema';
 import { Transaction } from '../../types';
+import { useAppContext } from '../../context/AppContext';
 
 
 interface onCloseFormprops{
   onCloseForm : () => void;
   closeformcheck : boolean;
-  currentDay : string;
-  onSaveTransaction : (transaction: SchemaType) => Promise<void>;
   SelectTransaction : Transaction | null;
   setSelectTransaction : React.Dispatch<React.SetStateAction<Transaction | null>>
-  onDeleteTransaction : (transactionId: string | readonly string[]) => Promise<void>
 }
 
 interface CategoriesType {
@@ -32,11 +30,12 @@ interface CategoriesType {
 }
 
 const TransactionForm = ({
-  onCloseForm , closeformcheck , currentDay , 
-  onSaveTransaction , SelectTransaction , onDeleteTransaction , 
-  setSelectTransaction
+  onCloseForm , closeformcheck ,
+  SelectTransaction , setSelectTransaction
 } : onCloseFormprops) => {
 
+  //カスタムフックを用いる
+  const {currentDay , onSaveTransaction , onDeleteTransaction} = useAppContext();
   const expenseCategories : CategoriesType[] = [
     {label : "食費" , icon : <FastfoodIcon fontSize='small'/>},
     {label : "日用品" , icon : <AddShoppingCartIcon fontSize='small'/>},
