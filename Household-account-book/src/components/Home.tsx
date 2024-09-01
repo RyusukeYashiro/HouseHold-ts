@@ -4,27 +4,15 @@ import Calender from "./layout/Calender"
 import TransactionMenu from "./layout/TransactionMenu"
 import TransactionForm from "./layout/TransactionForm"
 import { Transaction } from "../types"
-import { useState } from "react"
-import { format } from "date-fns"
-import { SchemaType } from "../validations/schema"
+import { useMemo, useState } from "react"
+import { useMonthlyTransactions } from "../hooks/useMOnthlyTransactions"
+import { useAppContext } from "../context/AppContext"
 
-interface HomeProps {
-  monthlyTransactions : Transaction[],
-  setCurrentMonth : React.Dispatch<React.SetStateAction<Date>>,
-  onSaveTransaction : (transaction: SchemaType) => Promise<void>
-  onDeleteTransaction : (transactionId: string | readonly string[]) => Promise<void>
-}
+const Home = () => {
 
-const Home = ({ 
-  monthlyTransactions , 
-  setCurrentMonth , 
-  onSaveTransaction,
-  onDeleteTransaction
-} : HomeProps) => {
-  //現在の日付を指定した形で
-  const today = format(new Date() , "yyyy-MM-dd");
-  // 日付を管理するstate
-  const [currentDay , setCurrentDay] = useState(today);
+  const {currentDay} = useAppContext();
+
+  const monthlyTransactions = useMonthlyTransactions();
   // フォームが閉じたかを管理
   const [closeformcheck , setCloseFormCheck] = useState(false);
   //選んだformdataを管理
@@ -32,9 +20,11 @@ const Home = ({
   // console.log('クリックされた時の日付を表示!' , currentDay);
 
   //filterで現在の日付のデータを月のデータからフィルタリング
-  const dailyTransactions = monthlyTransactions.filter((transaction) => {
-    return transaction.date === currentDay;
-  })
+  const dailyTransactions = useMemo(() => {
+    return monthlyTransactions.filter((transaction) => 
+      transaction.date === currentDay
+    );
+  } , [monthlyTransactions , currentDay])
 
   //formを閉じるボタンの実装
   const onCloseForm = () => {
@@ -64,14 +54,10 @@ const Home = ({
     <Box sx={{display : "flex"}}>
       {/* 左側に表示するコンテンツ */}
       <Box sx={{flexGrow : 1}}>
-        <MonthlySummary monthlyTransactions={monthlyTransactions}/>
-        <Calender
-          monthlyTransactions={monthlyTransactions}
-          setCurrentMonth={setCurrentMonth}
-          setCurrentDay={setCurrentDay}
-          currentDay={currentDay}
-          today={today}
-          />
+        <MonthlySummary 
+        // monthlyTransactions={monthlyTransactions}
+        />
+        <Calender/>
       </Box>
       {/* 右側に表示するコンテンツ */}
       <Box>
@@ -84,11 +70,8 @@ const Home = ({
         <TransactionForm 
         onCloseForm={onCloseForm} 
         closeformcheck={closeformcheck} 
-        currentDay={currentDay}
-        onSaveTransaction={onSaveTransaction}
         SelectTransaction={SelectTransaction}
         setSelectTransaction={setSelectTransaction}
-        onDeleteTransaction={onDeleteTransaction} 
         />
       </Box>
     </Box>
