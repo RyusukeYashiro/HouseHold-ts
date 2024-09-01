@@ -21,8 +21,11 @@ const Home = ({
   onSaveTransaction,
   onDeleteTransaction
 } : HomeProps) => {
+  //現在の日付を指定した形で
   const today = format(new Date() , "yyyy-MM-dd");
+  // 日付を管理するstate
   const [currentDay , setCurrentDay] = useState(today);
+  // フォームが閉じたかを管理
   const [closeformcheck , setCloseFormCheck] = useState(false);
   //選んだformdataを管理
   const [SelectTransaction , setSelectTransaction] = useState<Transaction | null>(null);
